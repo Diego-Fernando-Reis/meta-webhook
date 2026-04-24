@@ -1,38 +1,29 @@
 const express = require("express");
-const axios = require("axios");
-
 const app = express();
+
 app.use(express.json());
 
-const VERIFY_TOKEN = "CarlosWebhook2026";
-const N8N_POST_URL = "https://utilitdigital-n8n-webhook.c4wjlz.easypanel.host/webhook/meta-whatsapp-post";
-
 app.get("/webhook/meta-whatsapp", (req, res) => {
-const mode = req.query["hub.mode"];
-const token = req.query["hub.verify_token"];
-const challenge = req.query["hub.challenge"];
+  console.log("GET recebido:", req.query);
 
-if (mode === "subscribe" && token === VERIFY_TOKEN) {
-return res.status(200).send(challenge);
-}
+  const verify_token = "CarlosWebhook2026";
 
-return res.sendStatus(403);
+  const mode = req.query["hub.mode"];
+  const token = req.query["hub.verify_token"];
+  const challenge = req.query["hub.challenge"];
+
+  if (mode && token === verify_token) {
+    return res.status(200).send(challenge);
+  } else {
+    return res.sendStatus(403);
+  }
 });
 
-app.post("/webhook/meta-whatsapp", async (req, res) => {
-try {
-await axios.post(N8N_POST_URL, req.body, {
-headers: { "Content-Type": "application/json" }
+app.post("/webhook/meta-whatsapp", (req, res) => {
+  console.log("POST recebido:", JSON.stringify(req.body));
+  res.sendStatus(200);
 });
 
-```
-return res.sendStatus(200);
-```
-
-} catch (error) {
-return res.sendStatus(500);
-}
+app.listen(process.env.PORT || 3000, () => {
+  console.log("Servidor rodando");
 });
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT);
