@@ -5,7 +5,7 @@ const app = express();
 app.use(express.json());
 
 const VERIFY_TOKEN = "CarlosWebhook2026";
-const N8N_POST_URL = "https://utilitdigital-n8n-webhook.c4wjlz.easypanel.host/webhook/meta-whatsapp-post";
+const N8N_POST_URL = "";
 
 app.get("/webhook/meta-whatsapp", (req, res) => {
   console.log("GET recebido:", req.query);
